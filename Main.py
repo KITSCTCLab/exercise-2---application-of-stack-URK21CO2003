@@ -1,43 +1,41 @@
-class evaluate_postfix:
+class evalpostfix:
     def __init__(self):
-        self.items=[]
-        self.size=-1
-    def isEmpty(self):
-        return self.items==[]
-    def push(self,item):
-        self.items.append(item)
-        self.size+=1
+        self.stack =[]
+        self.top =-1
     def pop(self):
-        if self.isEmpty():
-            return 0
+        if self.top ==-1:
+            return
         else:
-            self.size-=1
-            return self.items.pop()
-    def seek(self):
-        if self.isEmpty():
-            return False
-        else:
-            return self.items[self.size]
-    def evalute(self,expr):
-        for i in expr:
-            if i in '0123456789':
-                self.push(i)
-            else:
-                op1=self.pop()
-                op2=self.pop()
-                result=self.cal(op2,op1,i)
-                self.push(result)
-        return self.pop()
-    def cal(self,op2,op1,i):
-        if i is '*':
-            return int(op2)*int(op1)
-        elif i is '/':
-            return int(op2)/int(op1)
-        elif i is '+':
-            return int(op2)+int(op1)
-        elif i is '-':
-            return int(op2)-int(op1)
-s=evaluate_postfix()
-expr=input('enter the postfix expression')
-value=s.evalute(expr)
-print('the result of postfix expression',expr,'is',value)
+            self.top-= 1
+            return self.stack.pop()
+    def push(self, i):
+        self.top+= 1
+        self.stack.append(i)
+  
+    def centralfunc(self, ab):
+        for i in ab:
+  
+            # if the component of the list is an integer
+            try:
+                self.push(int(i))
+            # if the component of the list is not an integer, 
+            # it must be an operator. Using ValueError, we can 
+            # evaluate components of the list other than type int
+            except ValueError:
+                val1 = self.pop()
+                val2 = self.pop()
+                if i == '/':
+                  self.push(val2 / val1)
+                else:        
+                # switch statement to perform operation
+                  switcher ={'+':val2 + val1, '-':val2-val1, '*':val2 * val1, '^':val2**val1}
+                  self.push(switcher.get(i))
+        return int(self.pop())
+  
+str ='100 200 + 2 / 5 * 7 +'
+  
+# splitting the given string to obtain 
+# integers and operators into a list
+strconv = str.split(' ')
+obj = evalpostfix()
+print(obj.centralfunc(strconv))
