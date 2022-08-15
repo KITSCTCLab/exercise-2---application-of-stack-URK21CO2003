@@ -1,58 +1,39 @@
-class Evaluate:
-      
-    # Constructor to initialize the class variables
-    def __init__(self, capacity):
-        self.top = -1
-        self.capacity = capacity
-        # This array is used a stack 
-        self.array = []
-      
-    # check if the stack is empty
-    def isEmpty(self):
-        return True if self.top == -1 else False
-      
-    # Return the value of the top of the stack
-    def peek(self):
-        return self.array[-1]
-      
-    # Pop the element from the stack
-    def pop(self):
-        if not self.isEmpty():
-            self.top -= 1
-            return self.array.pop()
+def evaluatePostfix(givenExp):
+    # Create a stack by taking an empty list which acts
+    # as a stack in this case to hold operands (or values).
+    givenstack = []
+    # Traverse the given postfix expression using For loop.
+    for charact in givenExp:
+        # Push the element into the given stack if it is a number.
+        if charact.isdigit():
+            givenstack.append(int(charact))
+        # if the character is operator
         else:
-            return "$"
-      
-    # Push the element to the stack
-    def push(self, op):
-        self.top += 1
-        self.array.append(op) 
-  
-  
-    # The main function that converts given infix expression
-    # to postfix expression
-    def evaluatePostfix(self, exp):
-          
-        # Iterate over the expression for conversion
-        for i in exp:
-              
-            # If the scanned character is an operand
-            # (number here) push it to the stack
-            if i.isdigit():
-                self.push(i)
-  
-            # If the scanned character is an operator,
-            # pop two elements from stack and apply it.
-            else:
-                val1 = self.pop()
-                val2 = self.pop()
-                self.push(str(eval(val2 + i + val1)))
-  
-        return int(self.pop())
-                  
-  
-              
-# Driver program to test above function
-exp = "231*+9-"
-obj = Evaluate(len(exp))
-print ("postfix evaluation: %d"%(obj.evaluatePostfix(exp)))
+            # remove the top two elements from the stack
+            topfirst = givenstack.pop()
+            topsecond = givenstack.pop()
+            # Evaluate the operator and return the answer to the stack using append() funtion.
+            # If the operator is '+' then perform an addition operation on
+            # the top two elements by popping them out.
+            if charact == '+':
+                givenstack.append(topsecond + topfirst)
+            # If the operator is '-' then perform a subtraction operation
+            # on the top two elements by popping them out.
+            elif charact == '-':
+                givenstack.append(topsecond - topfirst)
+            # If the operator is '/' then perform a division operation on
+            # the top two elements by popping them out.
+            elif charact == '×':
+                givenstack.append(topsecond * topfirst)
+            # If the operator is '*' then perform a multiplication operation
+            # on the top two elements by popping them out.
+            elif charact == '/':
+                givenstack.append(topsecond // topfirst)
+    # The only number in the stack is the final answer when the expression is traversed.
+    # return the answer to the main function
+    return givenstack.pop()
+# Driver code
+# Give the postfix Expression as user input using input() function and store it in a variable.
+givenExp = input('Enter some random postfix Expression = ')
+# Pass the given postfix Expression as an argument to evalpostfix function
+print('The value of the given postfix expression =', evaluatePostfix(givenExp))
